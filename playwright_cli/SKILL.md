@@ -269,10 +269,10 @@ playwright-cli close
 
 ## Specific tasks
 
-* **Request mocking** [references/request-mocking.md](references/request-mocking.md)
-* **Running Playwright code** [references/running-code.md](references/running-code.md)
-* **Browser session management** [references/session-management.md](references/session-management.md)
-* **Storage state (cookies, localStorage)** [references/storage-state.md](references/storage-state.md)
-* **Test generation** [references/test-generation.md](references/test-generation.md)
-* **Tracing** [references/tracing.md](references/tracing.md)
-* **Video recording** [references/video-recording.md](references/video-recording.md)
+* **Request mocking** [references/request-mocking.md](request-mocking.md)
+* **Running Playwright code** [references/running-code.md](running-code.md)
+* **Browser session management** [references/session-management.md](session-management.md)
+* **Storage state (cookies, localStorage)** [references/storage-state.md](storage-state.md)
+* **Test generation** [references/test-generation.md](test-generation.md)
+* **Tracing** [references/tracing.md](tracing.md)
+* **Video recording** [references/video-recording.md](video-recording.md)

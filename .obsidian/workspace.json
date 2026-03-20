@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "playwright_cli/references/video-recording.md.md",
+                "file": "playwright_cli/SKILL.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "video-recording.md"
+              "title": "SKILL"
             }
           }
         ],
@@ -211,14 +211,14 @@
   },
   "active": "6be2b61e2740ae2a",
   "lastOpenFiles": [
-    "playwright_cli/references/tracing.md.md",
-    "playwright_cli/references/video-recording.md.md",
-    "playwright_cli/references/test-generation.md.md",
-    "playwright_cli/references/storage-state.md.md",
-    "playwright_cli/references/session-management.md.md",
-    "playwright_cli/references/running-code.md.md",
-    "playwright_cli/references/request-mocking.md.md",
-    "playwright_cli/SKILL.md.md",
+    "playwright_cli/references/video-recording.md",
+    "playwright_cli/references/tracing.md",
+    "playwright_cli/references/test-generation.md",
+    "playwright_cli/references/storage-state.md",
+    "playwright_cli/references/session-management.md",
+    "playwright_cli/references/running-code.md",
+    "playwright_cli/references/request-mocking.md",
+    "playwright_cli/SKILL.md",
     "playwright_cli/references",
     "playwright_cli",
     "Welcome.md"
