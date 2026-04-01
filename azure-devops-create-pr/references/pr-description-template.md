@@ -20,8 +20,6 @@ Substitua todos os placeholders `{...}` com os dados reais coletados.
 |------|----------|
 {LINHAS_DE_COMMITS}
 
----
-*PR criado automaticamente pela skill azure-devops-create-pr* 🤖
 ```
 
 ---
