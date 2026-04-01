@@ -19,8 +19,9 @@ Esta skill executa o fluxo completo de criação de PR no Azure DevOps:
 1. **Coleta parâmetros** — branch de origem, destino e ID da task
 2. **Busca commits** — diferença entre as branches (commits exclusivos da source)
 3. **Obtém contexto da task** — título, descrição e tipo da work item
-4. **Cria o PR** — com descrição Markdown estruturada e título derivado da task
-5. **Vincula a work item** — ao PR recém-criado automaticamente
+4. **Busca URLs do ambiente** — portal e admin do ambiente de homologação provisionado pela pipeline
+5. **Cria o PR** — com descrição Markdown estruturada e título derivado da task
+6. **Vincula a work item** — ao PR recém-criado automaticamente
 
 ---
 
@@ -84,7 +85,66 @@ Se a work item **não for encontrada**, continue com o ID apenas (sem título) e
 
 ---
 
-## Passo 3 — Compor o Pull Request
+## Passo 3 — Buscar URLs do Ambiente de Homologação
+
+Tente obter as URLs do ambiente provisionado pela pipeline de feature (portal e admin).
+
+### 3.1 — Encontrar a build da branch
+
+Use `pipelines_get_builds` para listar builds da `sourceBranch`:
+
+```
+Ferramenta: pipelines_get_builds
+Parâmetros:
+  - project: <projectName>
+  - branchName: refs/heads/<sourceBranch>
+  - statusFilter: completed
+  - resultFilter: succeeded
+  - top: 1
+```
+
+Se **nenhuma build bem-sucedida** for encontrada para a branch, pule este passo e continue sem URLs — a seção de ambiente será omitida na descrição.
+
+### 3.2 — Listar os logs da build
+
+Use `pipelines_get_build_log` com o `buildId` encontrado para obter o índice de logs:
+
+```
+Ferramenta: pipelines_get_build_log
+Parâmetros:
+  - project: <projectName>
+  - buildId: <buildId>
+```
+
+**Encontre** na lista o log cujo `name` contenha `"Exibir URLs do ambiente"` (step do job `PrintURLs` no stage `Summary`).
+
+### 3.3 — Ler o log e extrair as URLs
+
+Use `pipelines_get_build_log_by_id` com o `id` do log encontrado:
+
+```
+Ferramenta: pipelines_get_build_log_by_id
+Parâmetros:
+  - project: <projectName>
+  - buildId: <buildId>
+  - logId: <id do log do step "Exibir URLs do ambiente">
+```
+
+**Parse o conteúdo** buscando as linhas:
+```
+Portal Frontend: https://...
+Admin Frontend:  https://...
+```
+
+**Extraia:**
+- `portalUrl` — URL completa do Portal Frontend
+- `adminUrl` — URL completa do Admin Frontend
+
+> Se o log não for encontrado, as variáveis conterem o nome literal `$(portalUrl)` ou `$(adminUrl)` (não resolvido), ou qualquer erro ocorrer: **pule silenciosamente** e omita a seção de ambiente na descrição do PR.
+
+---
+
+## Passo 4 — Compor o Pull Request
 
 ### Título do PR
 
@@ -111,6 +171,15 @@ Monte o template abaixo, preenchendo cada seção com os dados coletados:
 
 * 🔗 **Task que o PR resolve:** [#{workItemId} — {WorkItemTitle}]({urlDaTask})
 
+{BLOCO_AMBIENTE — inclua apenas se portalUrl e adminUrl foram obtidos com sucesso:
+## 🌐 Ambiente de Homologação
+
+| Serviço | URL |
+|---------|-----|
+| Portal | [{portalUrl}]({portalUrl}) |
+| Admin  | [{adminUrl}]({adminUrl}) |
+}
+
 * 📝 **Commits incluídos:**
 
 | Hash | Mensagem |
@@ -136,7 +205,7 @@ Exemplos de resumo ruim (evitar):
 
 ---
 
-## Passo 4 — Criar o Pull Request
+## Passo 5 — Criar o Pull Request
 
 Use `repo_create_pull_request` com os dados compostos.
 
@@ -160,7 +229,9 @@ Parâmetros:
 
 ---
 
-## Passo 5 — Vincular a Work Item ao PR
+---
+
+## Passo 6 — Vincular a Work Item ao PR
 
 Use `wit_link_work_item_to_pull_request` para criar o vínculo oficial.
 
@@ -177,7 +248,7 @@ Se a ferramenta falhar (ex: permissão), **continue** e avise o usuário para vi
 
 ---
 
-## Passo 6 — Relatório Final
+## Passo 7 — Relatório Final
 
 Após concluir todos os passos, exiba o sumário:
 

@@ -14,6 +14,13 @@ Substitua todos os placeholders `{...}` com os dados reais coletados.
 
 * 🔗 **Task que o PR resolve:** [#{WORK_ITEM_ID} — {WORK_ITEM_TITLE}]({WORK_ITEM_URL})
 
+## 🌐 Ambiente de Homologação
+
+| Serviço | URL |
+|---------|-----|
+| Portal | [{PORTAL_URL}]({PORTAL_URL}) |
+| Admin  | [{ADMIN_URL}]({ADMIN_URL}) |
+
 * 📝 **Commits incluídos:**
 
 | Hash | Mensagem |
@@ -68,6 +75,22 @@ Se a work item não foi encontrada:
 
 ---
 
+---
+
+### `{PORTAL_URL}` e `{ADMIN_URL}`
+
+Obtidos no **Passo 3** da skill, lendo o log do step `"Exibir URLs do ambiente"` (job `PrintURLs`, stage `Summary`) da pipeline de feature.
+
+O log contém linhas no formato:
+```
+Portal Frontend: https://feature-minha-branch.up.railway.app
+Admin Frontend:  https://feature-minha-branch-admin.up.railway.app
+```
+
+**Se as URLs não estiverem disponíveis** (pipeline não executou, falhou, ou variáveis não resolvidas), **omita toda a seção** `## 🌐 Ambiente de Homologação` da descrição.
+
+---
+
 ### `{LINHAS_DE_COMMITS}`
 
 Gere uma linha por commit no formato de tabela Markdown:
@@ -103,6 +126,13 @@ Gere uma linha por commit no formato de tabela Markdown:
 
 * 🔗 **Task que o PR resolve:** [#5053 — Inativar associados cancelados](https://dev.azure.com/annexus/Projeto/_workitems/edit/5053)
 
+## 🌐 Ambiente de Homologação
+
+| Serviço | URL |
+|---------|-----|
+| Portal | [https://feature-inativar-cancelados.up.railway.app](https://feature-inativar-cancelados.up.railway.app) |
+| Admin  | [https://feature-inativar-cancelados-admin.up.railway.app](https://feature-inativar-cancelados-admin.up.railway.app) |
+
 * 📝 **Commits incluídos:**
 
 | Hash | Mensagem |
@@ -132,6 +162,13 @@ Gere uma linha por commit no formato de tabela Markdown:
   de borda identificados durante a investigação.
 
 * 🔗 **Task que o PR resolve:** [#4892 — Corrigir cálculo de mensalidade em parcelas retroativas](https://dev.azure.com/annexus/Projeto/_workitems/edit/4892)
+
+## 🌐 Ambiente de Homologação
+
+| Serviço | URL |
+|---------|-----|
+| Portal | [https://feature-corrigir-calculo-mensalidade.up.railway.app](https://feature-corrigir-calculo-mensalidade.up.railway.app) |
+| Admin  | [https://feature-corrigir-calculo-mensalidade-admin.up.railway.app](https://feature-corrigir-calculo-mensalidade-admin.up.railway.app) |
 
 * 📝 **Commits incluídos:**
 

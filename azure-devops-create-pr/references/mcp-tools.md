@@ -183,6 +183,95 @@ Lista PRs existentes. Use para verificar se já existe um PR aberto para a branc
 
 ---
 
+## `pipelines_get_builds`
+
+Lista builds de um projeto, com filtros por branch, status e resultado.
+Use para encontrar a build mais recente bem-sucedida de uma feature branch.
+
+### Parâmetros principais
+
+| Campo            | Tipo   | Descrição                                                              |
+|------------------|--------|------------------------------------------------------------------------|
+| `project`        | string | Nome ou ID do projeto                                                  |
+| `branchName`     | string | Branch no formato `refs/heads/feature/minha-branch`                   |
+| `statusFilter`   | string | `"completed"` para builds finalizadas                                  |
+| `resultFilter`   | string | `"succeeded"` para builds com sucesso                                  |
+| `top`            | number | Máximo de resultados (use `1` para pegar apenas a mais recente)       |
+
+### Campos relevantes na resposta
+
+```json
+{
+  "value": [
+    {
+      "id": 1234,
+      "buildNumber": "20240115.5",
+      "status": "completed",
+      "result": "succeeded",
+      "sourceBranch": "refs/heads/feature/minha-branch"
+    }
+  ]
+}
+```
+
+---
+
+## `pipelines_get_build_log`
+
+Lista os registros de log de uma build (índice de logs com IDs e nomes dos steps).
+
+### Parâmetros principais
+
+| Campo       | Tipo   | Descrição              |
+|-------------|--------|------------------------|
+| `project`   | string | Nome ou ID do projeto  |
+| `buildId`   | number | ID da build            |
+
+### Campos relevantes na resposta
+
+```json
+{
+  "value": [
+    {
+      "id": 42,
+      "type": "Task",
+      "url": "...",
+      "lineCount": 18
+    }
+  ]
+}
+```
+
+> **Nota:** O índice pode não incluir o nome do step diretamente. Se necessário, itere pelos logs
+> ou tente obter o log do último step do stage `Summary` (geralmente tem o maior `id`).
+
+---
+
+## `pipelines_get_build_log_by_id`
+
+Retorna o conteúdo textual de um log específico de uma build.
+
+### Parâmetros principais
+
+| Campo       | Tipo   | Descrição                                      |
+|-------------|--------|------------------------------------------------|
+| `project`   | string | Nome ou ID do projeto                          |
+| `buildId`   | number | ID da build                                    |
+| `logId`     | number | ID do log (obtido via `pipelines_get_build_log`) |
+
+### Resposta
+
+Texto plano com as linhas do log. Para a step `"Exibir URLs do ambiente"`, procure por:
+
+```
+Portal Frontend: https://...
+Admin Frontend:  https://...
+```
+
+Use regex ou split por linha para extrair os valores após `: `.
+
+---
+
 ## `pipelines_get_build_changes`
 
 **Alternativa** para listar commits de uma build/pipeline associada à branch.
@@ -204,19 +293,28 @@ Use apenas se `repo_search_commits` não retornar resultados satisfatórios.
 Usuário pede PR
        │
        ▼
-repo_search_commits          ← commits exclusivos da source branch
+repo_search_commits                    ← commits exclusivos da source branch
        │
        ▼
-wit_get_work_item             ← título, tipo, URL da task
+wit_get_work_item                       ← título, tipo, URL da task
        │
+       ▼
+pipelines_get_builds                    ← build mais recente bem-sucedida da branch
+       │
+       ▼
+pipelines_get_build_log                 ← índice de logs da build
+       │
+       ▼
+pipelines_get_build_log_by_id           ← conteúdo do log "Exibir URLs do ambiente"
+       │                                   (extrai portalUrl e adminUrl)
        ▼
 [Compor título + descrição Markdown]
        │
        ▼
-repo_create_pull_request      ← cria o PR, retorna pullRequestId
+repo_create_pull_request                ← cria o PR, retorna pullRequestId
        │
        ▼
-wit_link_work_item_to_pull_request  ← vincula task ao PR
+wit_link_work_item_to_pull_request      ← vincula task ao PR
        │
        ▼
 [Exibir relatório final]
